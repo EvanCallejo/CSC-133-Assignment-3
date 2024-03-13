@@ -12,7 +12,8 @@ import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
-class Snake {
+class Snake
+{
 
     // The location in the grid of all the segments
     private ArrayList<Point> segmentLocations;
@@ -28,7 +29,8 @@ class Snake {
     private int halfWayPoint;
 
     // For tracking movement Heading
-    private enum Heading {
+    private enum Heading
+    {
         UP, RIGHT, DOWN, LEFT
     }
 
@@ -45,7 +47,8 @@ class Snake {
     private Bitmap mBitmapBody;
 
 
-    Snake(Context context, Point mr, int ss) {
+    Snake(Context context, Point mr, int ss)
+    {
 
         // Initialize our ArrayList
         segmentLocations = new ArrayList<>();
@@ -115,7 +118,8 @@ class Snake {
     }
 
     // Get the snake ready for a new game
-    void reset(int w, int h) {
+    void reset(int w, int h)
+    {
 
         // Reset the heading
         heading = Heading.RIGHT;
@@ -128,11 +132,13 @@ class Snake {
     }
 
 
-    void move() {
+    void move()
+    {
         // Move the body
         // Start at the back and move it
         // to the position of the segment in front of it
-        for (int i = segmentLocations.size() - 1; i > 0; i--) {
+        for (int i = segmentLocations.size() - 1; i > 0; i--)
+        {
 
             // Make it the same value as the next segment
             // going forwards towards the head
@@ -145,7 +151,8 @@ class Snake {
         Point p = segmentLocations.get(0);
 
         // Move it appropriately
-        switch (heading) {
+        switch (heading)
+        {
             case UP:
                 p.y--;
                 break;
@@ -165,7 +172,8 @@ class Snake {
 
     }
 
-    boolean detectDeath() {
+    boolean detectDeath()
+    {
         // Has the snake died?
         boolean dead = false;
 
@@ -173,8 +181,8 @@ class Snake {
         if (segmentLocations.get(0).x == -1 ||
                 segmentLocations.get(0).x > mMoveRange.x ||
                 segmentLocations.get(0).y == -1 ||
-                segmentLocations.get(0).y > mMoveRange.y) {
-
+                segmentLocations.get(0).y > mMoveRange.y)
+        {
             dead = true;
         }
 
@@ -190,10 +198,12 @@ class Snake {
         return dead;
     }
 
-    boolean checkDinner(Point l) {
+    boolean checkDinner(Point l)
+    {
         //if (snakeXs[0] == l.x && snakeYs[0] == l.y) {
         if (segmentLocations.get(0).x == l.x &&
-                segmentLocations.get(0).y == l.y) {
+                segmentLocations.get(0).y == l.y)
+        {
 
             // Add a new Point to the list
             // located off-screen.
@@ -206,13 +216,16 @@ class Snake {
         return false;
     }
 
-    void draw(Canvas canvas, Paint paint) {
+    void draw(Canvas canvas, Paint paint)
+    {
 
         // Don't run this code if ArrayList has nothing in it
-        if (!segmentLocations.isEmpty()) {
+        if (!segmentLocations.isEmpty())
+        {
             // All the code from this method goes here
             // Draw the head
-            switch (heading) {
+            switch (heading)
+            {
                 case RIGHT:
                     canvas.drawBitmap(mBitmapHeadRight,
                             segmentLocations.get(0).x
@@ -247,7 +260,8 @@ class Snake {
             }
 
             // Draw the snake body one block at a time
-            for (int i = 1; i < segmentLocations.size(); i++) {
+            for (int i = 1; i < segmentLocations.size(); i++)
+            {
                 canvas.drawBitmap(mBitmapBody,
                         segmentLocations.get(i).x
                                 * mSegmentSize,
@@ -259,11 +273,14 @@ class Snake {
 
 
     // Handle changing direction
-    void switchHeading(MotionEvent motionEvent) {
+    void switchHeading(MotionEvent motionEvent)
+    {
 
         // Is the tap on the right hand side?
-        if (motionEvent.getX() >= halfWayPoint) {
-            switch (heading) {
+        if (motionEvent.getX() >= halfWayPoint)
+        {
+            switch (heading)
+            {
                 // Rotate right
                 case UP:
                     heading = Heading.RIGHT;
@@ -279,9 +296,12 @@ class Snake {
                     break;
 
             }
-        } else {
+        }
+        else
+        {
             // Rotate left
-            switch (heading) {
+            switch (heading)
+            {
                 case UP:
                     heading = Heading.LEFT;
                     break;

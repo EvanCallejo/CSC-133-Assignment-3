@@ -5,14 +5,16 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
 
-public class SnakeActivity extends Activity {
+public class SnakeActivity extends Activity
+{
 
     // Declare an instance of SnakeGame
     SnakeGame mSnakeGame;
 
     // Set the game up
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         // Get the pixel dimensions of the screen
@@ -31,14 +33,16 @@ public class SnakeActivity extends Activity {
 
     // Start the thread in snakeEngine
     @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
         mSnakeGame.resume();
     }
 
     // Stop the thread in snakeEngine
     @Override
-    protected void onPause() {
+    protected void onPause()
+    {
         super.onPause();
         mSnakeGame.pause();
     }

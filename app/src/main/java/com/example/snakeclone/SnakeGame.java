@@ -16,7 +16,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import java.io.IOException;
 
-class SnakeGame extends SurfaceView implements Runnable{
+class SnakeGame extends SurfaceView implements Runnable
+{
 
     // Objects for the game loop/thread
     private Thread mThread = null;
@@ -51,7 +52,8 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // This is the constructor method that gets called
     // from SnakeActivity
-    public SnakeGame(Context context, Point size) {
+    public SnakeGame(Context context, Point size)
+    {
         super(context);
 
         // Work out how many pixels each block is
@@ -60,7 +62,8 @@ class SnakeGame extends SurfaceView implements Runnable{
         mNumBlocksHigh = size.y / blockSize;
 
         // Initialize the SoundPool
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_MEDIA)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -70,10 +73,13 @@ class SnakeGame extends SurfaceView implements Runnable{
                     .setMaxStreams(5)
                     .setAudioAttributes(audioAttributes)
                     .build();
-        } else {
+        }
+        else
+        {
             mSP = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         }
-        try {
+        try
+        {
             AssetManager assetManager = context.getAssets();
             AssetFileDescriptor descriptor;
 
@@ -84,7 +90,8 @@ class SnakeGame extends SurfaceView implements Runnable{
             descriptor = assetManager.openFd("snake_death.ogg");
             mCrashID = mSP.load(descriptor, 0);
 
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             // Error
         }
 
@@ -107,7 +114,8 @@ class SnakeGame extends SurfaceView implements Runnable{
 
 
     // Called to start a new game
-    public void newGame() {
+    public void newGame()
+    {
 
         // reset the snake
         mSnake.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
@@ -125,11 +133,15 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // Handles the game loop
     @Override
-    public void run() {
-        while (mPlaying) {
-            if(!mPaused) {
+    public void run()
+    {
+        while (mPlaying)
+        {
+            if(!mPaused)
+            {
                 // Update 10 times a second
-                if (updateRequired()) {
+                if (updateRequired())
+                {
                     update();
                 }
             }
@@ -140,7 +152,8 @@ class SnakeGame extends SurfaceView implements Runnable{
 
 
     // Check to see if it is time for an update
-    public boolean updateRequired() {
+    public boolean updateRequired()
+    {
 
         // Run at 10 frames per second
         final long TARGET_FPS = 10;
@@ -165,7 +178,8 @@ class SnakeGame extends SurfaceView implements Runnable{
 
 
     // Update all the game objects
-    public void update() {
+    public void update()
+    {
 
         // Move the snake
         mSnake.move();
@@ -184,7 +198,8 @@ class SnakeGame extends SurfaceView implements Runnable{
         }
 
         // Did the snake die?
-        if (mSnake.detectDeath()) {
+        if (mSnake.detectDeath())
+        {
             // Pause the game ready to start again
             mSP.play(mCrashID, 1, 1, 0, 0, 1);
 
@@ -195,9 +210,11 @@ class SnakeGame extends SurfaceView implements Runnable{
 
 
     // Do all the drawing
-    public void draw() {
+    public void draw()
+    {
         // Get a lock on the mCanvas
-        if (mSurfaceHolder.getSurface().isValid()) {
+        if (mSurfaceHolder.getSurface().isValid())
+        {
             mCanvas = mSurfaceHolder.lockCanvas();
 
             // Fill the screen with a color
@@ -215,7 +232,8 @@ class SnakeGame extends SurfaceView implements Runnable{
             mSnake.draw(mCanvas, mPaint);
 
             // Draw some text while paused
-            if(mPaused){
+            if(mPaused)
+            {
 
                 // Set the size and color of the mPaint for the text
                 mPaint.setColor(Color.argb(255, 255, 255, 255));
@@ -236,10 +254,13 @@ class SnakeGame extends SurfaceView implements Runnable{
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent motionEvent) {
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+    public boolean onTouchEvent(MotionEvent motionEvent)
+    {
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK)
+        {
             case MotionEvent.ACTION_UP:
-                if (mPaused) {
+                if (mPaused)
+                {
                     mPaused = false;
                     newGame();
 
@@ -260,18 +281,23 @@ class SnakeGame extends SurfaceView implements Runnable{
 
 
     // Stop the thread
-    public void pause() {
+    public void pause()
+    {
         mPlaying = false;
-        try {
+        try
+        {
             mThread.join();
-        } catch (InterruptedException e) {
-            // Error
+        }
+        catch (InterruptedException e)
+        {
+            System.out.println("Something went wrong");
         }
     }
 
 
     // Start the thread
-    public void resume() {
+    public void resume()
+    {
         mPlaying = true;
         mThread = new Thread(this);
         mThread.start();

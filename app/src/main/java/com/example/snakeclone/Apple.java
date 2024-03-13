@@ -8,27 +8,30 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import java.util.Random;
 
-class Apple {
+class Apple
+{
     private Point appleLocateNotPixel = new Point();
     private Point appleSpawnRange;
     private int appleSize;
     private Bitmap appleImageBitmap;
 
-    Apple(Context context, Point sr, int s){
+    Apple(Context context, Point appleSpawnRange, int appleSize)
+    {
 
         // Make a note of the passed in spawn range
-        appleSpawnRange = sr;
+        this.appleSpawnRange = appleSpawnRange;
         // Make a note of the size of an apple
-        appleSize = s;
+        this.appleSize = appleSize;
         // Hide the apple off-screen until the game starts
         appleLocateNotPixel.x = -10;
 
         // Load the image to the bitmap
         appleImageBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.apple);
-        appleImageBitmap = Bitmap.createScaledBitmap(appleImageBitmap, s, s, false);
+        appleImageBitmap = Bitmap.createScaledBitmap(appleImageBitmap, appleSize, appleSize, false);
     }
 
-    void spawnAppleWhenEaten(){
+    void spawnAppleWhenEaten()
+    {
         Random random = new Random();
         appleLocateNotPixel.x = random.nextInt(appleSpawnRange.x) + 1;
         appleLocateNotPixel.y = random.nextInt(appleSpawnRange.y - 1) + 1;
@@ -37,11 +40,12 @@ class Apple {
     // Let SnakeGame know where the apple is
     // SnakeGame can share this with the snake
     Point getAppleLocateNotPixel(){
-        return appleLocateNotPixel;
+        return this.appleLocateNotPixel;
     }
 
     // Draw the apple
-    void draw(Canvas canvas, Paint paint){
+    void draw(Canvas canvas, Paint paint)
+    {
         canvas.drawBitmap(appleImageBitmap,
                 appleLocateNotPixel.x * appleSize, appleLocateNotPixel.y * appleSize, paint);
 
