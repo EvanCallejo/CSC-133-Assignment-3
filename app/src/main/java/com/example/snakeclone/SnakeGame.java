@@ -146,7 +146,19 @@ class SnakeGame extends SurfaceView implements Runnable
                 }
             }
 
-            draw();
+            //draw();
+            // Do all the drawing
+            if (mSurfaceHolder.getSurface().isValid())
+            {
+                drawBackground();
+                if(mPaused)
+                {
+                    drawMessage();
+                }
+
+                // Unlock the mCanvas and reveal the graphics for this frame
+                mSurfaceHolder.unlockCanvasAndPost(mCanvas);
+            }
         }
     }
 
@@ -207,10 +219,47 @@ class SnakeGame extends SurfaceView implements Runnable
         }
 
     }
+    private void drawBackground()
+    {
+        mCanvas = mSurfaceHolder.lockCanvas();
 
+        // Fill the screen with a color
+        mCanvas.drawColor(Color.argb(255, 26, 128, 182));
+
+        // Set the size and color of the mPaint for the text
+        mPaint.setColor(Color.argb(255, 255, 255, 255));
+        mPaint.setTextSize(120);
+
+        // Draw the score
+        mCanvas.drawText("" + mScore, 20, 120, mPaint);
+
+        // Draw the apple and the snake
+        mApple.draw(mCanvas, mPaint);
+        mSnake.draw(mCanvas, mPaint);
+
+    }
+    private void drawMessage()
+    {
+        // Set the size and color of the mPaint for the text
+        mPaint.setColor(Color.argb(255, 255, 255, 255));
+        mPaint.setTextSize(100);
+
+        // Draw the message
+        // We will give this an international upgrade soon
+        //mCanvas.drawText("Tap To Play!", 200, 700, mPaint);
+        mCanvas.drawText(getResources().
+                        getString(R.string.tap_to_play),
+                100, 400, mPaint);
+
+        mPaint.setColor(Color.argb(255, 255, 255, 255));
+        mPaint.setTextSize(25);
+        mCanvas.drawText(getResources().
+                        getString(R.string.display_names),
+                400, 75, mPaint);
+    }
 
     // Do all the drawing
-    public void draw()
+    /*public void draw()
     {
         // Get a lock on the mCanvas
         if (mSurfaceHolder.getSurface().isValid())
@@ -257,7 +306,7 @@ class SnakeGame extends SurfaceView implements Runnable
             // Unlock the mCanvas and reveal the graphics for this frame
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
         }
-    }
+    }*/
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent)
