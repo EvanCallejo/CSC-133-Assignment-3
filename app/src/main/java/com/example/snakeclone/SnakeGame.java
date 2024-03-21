@@ -90,9 +90,10 @@ class SnakeGame extends SurfaceView implements Runnable
             descriptor = assetManager.openFd("snake_death.ogg");
             mCrashID = mSP.load(descriptor, 0);
 
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
-            // Error
+            System.out.println("Something went wrong");
         }
 
         // Initialize the drawing objects
@@ -106,8 +107,7 @@ class SnakeGame extends SurfaceView implements Runnable
                 blockSize);
 
         mSnake = new Snake(context,
-                new Point(NUM_BLOCKS_WIDE,
-                        mNumBlocksHigh),
+                new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh),
                 blockSize);
 
     }
@@ -245,6 +245,12 @@ class SnakeGame extends SurfaceView implements Runnable
                 mCanvas.drawText(getResources().
                                 getString(R.string.tap_to_play),
                         100, 400, mPaint);
+
+                mPaint.setColor(Color.argb(255, 255, 255, 255));
+                mPaint.setTextSize(25);
+                mCanvas.drawText(getResources().
+                                getString(R.string.display_names),
+                        400, 75, mPaint);
             }
 
 

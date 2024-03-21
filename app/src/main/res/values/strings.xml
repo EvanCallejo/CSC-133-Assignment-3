@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Snake Clone</string>
     <string name="tap_to_play">Tap to Play!</string>
+    <string name="display_names">By: Evan Callejo, Alan Lei</string>
 </resources>
