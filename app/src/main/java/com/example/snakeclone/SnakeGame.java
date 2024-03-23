@@ -118,10 +118,10 @@ class SnakeGame extends SurfaceView implements Runnable
     {
 
         // reset the snake
-        mSnake.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
+        mSnake.reSpawnGameObject(NUM_BLOCKS_WIDE, mNumBlocksHigh);
 
         // Get the apple ready for dinner
-        mApple.spawnAppleWhenEaten();
+        mApple.reSpawnGameObject();
 
         // Reset the mScore
         mScore = 0;
@@ -197,10 +197,10 @@ class SnakeGame extends SurfaceView implements Runnable
         mSnake.move();
 
         // Did the head of the snake eat the apple?
-        if(mSnake.checkDinner(mApple.getAppleLocateNotPixel())){
+        if(mSnake.checkDinner(mApple.getAppleObject())){
             // This reminds me of Edge of Tomorrow.
             // One day the apple will be ready!
-            mApple.spawnAppleWhenEaten();
+            mApple.reSpawnGameObject();
 
             // Add to  mScore
             mScore = mScore + 1;
