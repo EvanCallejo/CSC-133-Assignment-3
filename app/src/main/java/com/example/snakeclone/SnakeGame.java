@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -49,12 +50,18 @@ class SnakeGame extends SurfaceView implements Runnable
     // And an apple
     private Apple mApple;
 
+    private boolean mPausedClicked = false;
+
+    private Context mContext;
+
 
     // This is the constructor method that gets called
     // from SnakeActivity
     public SnakeGame(Context context, Point size)
     {
         super(context);
+
+        mContext = context;
 
         // Work out how many pixels each block is
         int blockSize = size.x / NUM_BLOCKS_WIDE;
@@ -150,10 +157,20 @@ class SnakeGame extends SurfaceView implements Runnable
             // Do all the drawing
             if (mSurfaceHolder.getSurface().isValid())
             {
+                mCanvas = mSurfaceHolder.lockCanvas();
+
+                //Sets text font
+                Typeface typeface = Typeface.createFromAsset(mContext.getAssets(), "spiral_bitmap.ttf");
+                mPaint.setTypeface(typeface);
+
                 drawBackground();
-                if(mPaused)
+                if(mPaused && !mPausedClicked)
                 {
-                    drawMessage();
+                    drawStartMenu();
+                }
+                else
+                {
+                    drawPauseButton();
                 }
 
                 // Unlock the mCanvas and reveal the graphics for this frame
@@ -221,13 +238,11 @@ class SnakeGame extends SurfaceView implements Runnable
     }
     private void drawBackground()
     {
-        mCanvas = mSurfaceHolder.lockCanvas();
-
         // Fill the screen with a color
-        mCanvas.drawColor(Color.argb(255, 26, 128, 182));
+        mCanvas.drawColor(Color.CYAN);
 
         // Set the size and color of the mPaint for the text
-        mPaint.setColor(Color.argb(255, 255, 255, 255));
+        mPaint.setColor(Color.WHITE);
         mPaint.setTextSize(120);
 
         // Draw the score
@@ -238,19 +253,18 @@ class SnakeGame extends SurfaceView implements Runnable
         mSnake.draw(mCanvas, mPaint);
 
     }
-    private void drawMessage()
+    private void drawStartMenu()
     {
         // Set the size and color of the mPaint for the text
         mPaint.setColor(Color.argb(255, 255, 255, 255));
         mPaint.setTextSize(100);
 
         // Draw the message
-        // We will give this an international upgrade soon
-        //mCanvas.drawText("Tap To Play!", 200, 700, mPaint);
         mCanvas.drawText(getResources().
                         getString(R.string.tap_to_play),
                 100, 400, mPaint);
 
+        //Draw author names
         mPaint.setColor(Color.argb(255, 255, 255, 255));
         mPaint.setTextSize(25);
         mCanvas.drawText(getResources().
@@ -258,16 +272,38 @@ class SnakeGame extends SurfaceView implements Runnable
                 400, 75, mPaint);
     }
 
+    private void drawPauseButton()
+    {
+        //Draw button background
+        mPaint.setColor(Color.BLACK);
+        mCanvas.drawRect(250, 1085, 500, 1175, mPaint);
+        mPaint.setColor(Color.WHITE);
+        mPaint.setTextSize(50);
+
+        if (mPausedClicked)
+        {
+            mCanvas.drawText("Resume", 300, 1150, mPaint);
+        }
+        else
+        {
+            mCanvas.drawText("Pause", 300, 1150, mPaint);
+        }
+    }
+
     // Do all the drawing
     /*public void draw()
     {
+        //Sets text font
+        Typeface typeface = Typeface.createFromAsset(mContext.getAssets(), "spiral_bitmap.ttf");
+        mPaint.setTypeface(typeface);
+
         // Get a lock on the mCanvas
         if (mSurfaceHolder.getSurface().isValid())
         {
             mCanvas = mSurfaceHolder.lockCanvas();
 
             // Fill the screen with a color
-            mCanvas.drawColor(Color.argb(255, 26, 128, 182));
+            mCanvas.drawColor(Color.CYAN);
 
             // Set the size and color of the mPaint for the text
             mPaint.setColor(Color.argb(255, 255, 255, 255));
@@ -281,7 +317,7 @@ class SnakeGame extends SurfaceView implements Runnable
             mSnake.draw(mCanvas, mPaint);
 
             // Draw some text while paused
-            if(mPaused)
+            if(mPaused && !mPausedClicked)
             {
 
                 // Set the size and color of the mPaint for the text
@@ -300,8 +336,27 @@ class SnakeGame extends SurfaceView implements Runnable
                 mCanvas.drawText(getResources().
                                 getString(R.string.display_names),
                         400, 75, mPaint);
-            }
 
+
+            }
+            else
+            {
+                //Draw button background
+                mPaint.setColor(Color.BLACK);
+                mCanvas.drawRect(250, 1085, 500, 1175, mPaint);
+                mPaint.setColor(Color.WHITE);
+                mPaint.setTextSize(50);
+
+                if (mPausedClicked)
+                {
+                    mCanvas.drawText("Resume", 300, 1150, mPaint);
+                }
+                else
+                {
+                    mCanvas.drawText("Pause", 300, 1150, mPaint);
+                }
+                //mCanvas.drawText("Pause", 300, 1150, mPaint);
+            }
 
             // Unlock the mCanvas and reveal the graphics for this frame
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
@@ -311,25 +366,43 @@ class SnakeGame extends SurfaceView implements Runnable
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent)
     {
+        float x = motionEvent.getX();
+        float y = motionEvent.getY();
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK)
         {
             case MotionEvent.ACTION_UP:
                 if (mPaused)
                 {
                     mPaused = false;
+                    if (x >= 250 && x <= 500 && y >= 1085 && y <= 1175)
+                    {
+                        mPausedClicked = false;
+                        // Let the Snake class handle the input
+                        mSnake.switchHeading(motionEvent);
+                    }
+                    else
+                    {
+                        newGame();
+                    }
                     newGame();
 
                     // Don't want to process snake direction for this tap
                     return true;
                 }
 
-                // Let the Snake class handle the input
-                mSnake.switchHeading(motionEvent);
+                if (x >= 250 && x <= 500 && y >= 1085 && y <= 1175)
+                {
+                    mPaused = true;
+                    mPausedClicked = true;
+                }
+                else
+                {
+                    // Let the Snake class handle the input
+                    mSnake.switchHeading(motionEvent);
+                }
                 break;
-
             default:
                 break;
-
         }
         return true;
     }
