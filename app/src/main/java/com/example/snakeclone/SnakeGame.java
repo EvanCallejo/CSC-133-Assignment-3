@@ -128,51 +128,6 @@ class SnakeGame extends SurfaceView implements Runnable
             }
         }
     }
-    private void checkPaused()
-    {
-        if(mPaused && !mPausedClicked)
-        {
-            drawStartMenu();
-        }
-        else
-        {
-            drawPauseButton();
-        }
-    }
-
-    public boolean updateRequired()
-    {
-        final long TARGET_FPS = 10;
-        final long MILLIS_PER_SECOND = 1000;
-
-        if(mNextFrameTime <= System.currentTimeMillis())
-        {
-            mNextFrameTime =System.currentTimeMillis()
-                    + MILLIS_PER_SECOND / TARGET_FPS;
-            return true;
-        }
-
-        return false;
-    }
-
-    public void update()
-    {
-        mSnake.move();
-
-        if(mSnake.checkDinner(mApple.getAppleObject())){
-            mApple.reSpawnGameObject();
-            mScore = mScore + 1;
-            mSP.play(mEat_ID, 1, 1, 0, 0, 1);
-        }
-
-        if (mSnake.detectDeath())
-        {
-            // Pause the game ready to start again
-            mSP.play(mCrashID, 1, 1, 0, 0, 1);
-
-            mPaused = true;
-        }
-    }
 
     private void drawBackground()
     {
@@ -225,6 +180,52 @@ class SnakeGame extends SurfaceView implements Runnable
         else
         {
             mCanvas.drawText("Pause", 300, 1150, mPaint);
+        }
+    }
+
+    private void checkPaused()
+    {
+        if(mPaused && !mPausedClicked)
+        {
+            drawStartMenu();
+        }
+        else
+        {
+            drawPauseButton();
+        }
+    }
+
+    public boolean updateRequired()
+    {
+        final long TARGET_FPS = 10;
+        final long MILLIS_PER_SECOND = 1000;
+
+        if(mNextFrameTime <= System.currentTimeMillis())
+        {
+            mNextFrameTime =System.currentTimeMillis()
+                    + MILLIS_PER_SECOND / TARGET_FPS;
+            return true;
+        }
+
+        return false;
+    }
+
+    public void update()
+    {
+        mSnake.move();
+
+        if(mSnake.checkDinner(mApple.getAppleObject())){
+            mApple.reSpawnGameObject();
+            mScore = mScore + 1;
+            mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+        }
+
+        if (mSnake.detectDeath())
+        {
+            // Pause the game ready to start again
+            mSP.play(mCrashID, 1, 1, 0, 0, 1);
+
+            mPaused = true;
         }
     }
 
