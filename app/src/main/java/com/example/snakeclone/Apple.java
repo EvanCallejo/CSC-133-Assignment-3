@@ -16,28 +16,22 @@ class Apple extends GameObject implements IGameFeatures
     }
     public @Override void setUpGameObject(Context context, Point range, int gameObjectSize)
     {
-        // Make a note of the passed in spawn range
         this.gameObjectRange = range;
-        // Make a note of the size of an apple
         this.gameObjectSize = gameObjectSize;
-        // Hide the apple off-screen until the game starts
         gameObject.x = -10;
 
         loadGameImageToBitmap(context);
     }
 
-    // Let SnakeGame know where the apple is
-    // SnakeGame can share this with the snake
+    // Let SnakeGame know where apple is and shares info with snake
     Point getAppleObject(){
         return this.gameObject;
     }
 
-    // Draw the apple
     public void draw(Canvas canvas, Paint paint)
     {
         canvas.drawBitmap(gameObjectBitmap,
                 gameObject.x * gameObjectSize, gameObject.y * gameObjectSize, paint);
 
     }
-
 }
